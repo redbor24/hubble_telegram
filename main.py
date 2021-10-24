@@ -1,10 +1,8 @@
 import requests
 from pathlib import Path
 
-IMAGES_FOLDER = 'images'
 
-
-def download_image(url, filename):
+def download_image(url, full_filename):
     headers = {
         'User-Agent': 'curl',
         'Accept-Language': 'ru-RU'
@@ -13,15 +11,21 @@ def download_image(url, filename):
     response = requests.get(url, headers=headers)
     response.raise_for_status()
 
-    images_directory = Path.cwd() / IMAGES_FOLDER
-    if not Path.is_dir(images_directory):
-        Path.mkdir(images_directory)
+    img_dir = Path(full_filename).parent
+    if not Path.is_dir(img_dir) and img_dir != '.':
+        Path.mkdir(img_dir, parents=True)
 
-    with open(Path(images_directory) / filename, 'wb') as file:
+    with open(full_filename, 'wb') as file:
         file.write(response.content)
 
 
 if __name__ == '__main__':
-    download_image(
-        'https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg',
-        'hubble.jpeg')
+    try:
+        download_image(
+            'https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg',
+            'hubble.jpeg')
+        download_image(
+            'https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg',
+            r'\2')
+    except Exception as e:
+        print(f'Ошибка сохранения файла: {e}')
