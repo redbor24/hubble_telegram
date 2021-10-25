@@ -1,5 +1,6 @@
 import requests
 from pathlib import Path
+import json
 
 
 def download_image(url, full_filename):
@@ -20,12 +21,21 @@ def download_image(url, full_filename):
 
 
 if __name__ == '__main__':
-    try:
-        download_image(
-            'https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg',
-            'hubble.jpeg')
-        download_image(
-            'https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg',
-            r'\2')
-    except Exception as e:
-        print(f'Ошибка сохранения файла: {e}')
+    # try:
+    #     download_image(
+    #         'https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg',
+    #         'hubble.jpeg')
+    #     download_image(
+    #         'https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg',
+    #         r'\2')
+    # except Exception as e:
+    #     print(f'Ошибка сохранения файла: {e}')
+
+    url = 'https://api.spacexdata.com/v4/launches/5eb87d4dffd86e000604b38e'
+    response = requests.get(url)
+    response.raise_for_status()
+
+    jsn = json.loads(response.content)
+    links = jsn['links']['flickr']['original']
+
+    print(links)
