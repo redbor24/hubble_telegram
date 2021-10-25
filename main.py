@@ -31,6 +31,8 @@ if __name__ == '__main__':
     # except Exception as e:
     #     print(f'Ошибка сохранения файла: {e}')
 
+    SAVE_PATH = 'E:\PythonProjects\devman\hubble_telegram\images'
+
     url = 'https://api.spacexdata.com/v4/launches/5eb87d4dffd86e000604b38e'
     response = requests.get(url)
     response.raise_for_status()
@@ -39,3 +41,6 @@ if __name__ == '__main__':
     links = jsn['links']['flickr']['original']
 
     print(links)
+
+    for num, link in enumerate(links, start=1):
+        download_image(link, Path(SAVE_PATH) / f'spacex{num}.jpg')
