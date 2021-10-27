@@ -1,8 +1,8 @@
-import os
+import json
+from pathlib import Path
+from urllib import parse
 
 import requests
-from pathlib import Path
-import json
 
 
 def download_image(url, full_filename):
@@ -27,26 +27,35 @@ def fetch_spacex_last_launch(id_launch, save_path):
     response = requests.get(url)
     response.raise_for_status()
 
-    jsn = json.loads(response.content)
-    links = jsn['links']['flickr']['original']
+    links = json.loads(response.content)['links']['flickr']['original']
     links_count = len(links)
     for num, link in enumerate(links, start=1):
         download_image(link, Path(save_path) / f'spacex{num}.jpg')
         print(f'{num}/{links_count} image downloaded')
 
 
-if __name__ == '__main__':
-    # try:
-    #     download_image(
-    #         'https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg',
-    #         'hubble.jpeg')
-    #     download_image(
-    #         'https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg',
-    #         r'\2')
-    # except Exception as e:
-    #     print(f'Ошибка сохранения файла: {e}')
+def get_file_ext_from_url(url):
+    return Path(parse.unquote(parse.urlparse(url).path)).suffix
 
-    # 19 images
-    # fetch_spacex_last_launch('5eb87ce3ffd86e000604b336', Path(os.getcwd()) / 'images')
-    # 2 images
-    fetch_spacex_last_launch('60e3bf0d73359e1e20335c37', Path(os.getcwd()) / 'images')
+
+def get_apod_images(nasa_token, save_path, image_count):
+    params = {
+        'api_key': nasa_token,
+        'count': image_count,
+        'thumbs': True
+    }
+    response = requests.get('https://api.nasa.gov/planetary/apod',
+                            params=params)
+    response.raise_for_status()
+    data = json.loads(response.content)
+
+    links_count = len(data)
+    for num, item in enumerate(data, start=1):
+        if get_file_ext_from_url(item['url']):
+            url, file_name = item['url'], \
+                    Path(parse.unquote(parse.urlparse(item['url']).path)).name
+        else:
+            url, file_name = item['thumbnail_url'], f'spacex{num}.jpg'
+
+        download_image(url, Path(save_path) / file_name)
+        print(f'{num}/{links_count} image downloaded')
