@@ -31,11 +31,13 @@ def fetch_spacex_launch(launch_id, save_path):
     response = requests.get(url)
     response.raise_for_status()
 
+    file_list = []
     links = json.loads(response.content)['links']['flickr']['original']
-    links_count = len(links)
     for num, link in enumerate(links, start=1):
-        download_image(link, Path(save_path) / f'spacex{num}.jpg')
-        print(f'{num}/{links_count} image downloaded')
+        filename = Path(save_path) / f'spacex{num}.jpg'
+        download_image(link, filename)
+        file_list.append(filename)
+    return file_list
 
 
 def get_file_ext_from_url(url):
@@ -56,16 +58,18 @@ def get_apod_images(nasa_token, save_path, image_count):
     response.raise_for_status()
     data = json.loads(response.content)
 
-    links_count = len(data)
+    file_list = []
     for num, item in enumerate(data, start=1):
         if get_file_ext_from_url(item['url']):
             url, file_name = item['url'], \
                              Path(parse.unquote(parse.urlparse(item['url']).
                                                 path)).name
         else:
-            url, file_name = item['thumbnail_url'], f'spacex{num}.jpg'
-        download_image(url, Path(save_path) / file_name)
-        print(f'{num}/{links_count} image downloaded')
+            url, file_name = item['thumbnail_url'], f'APOD{num}.jpg'
+        full_filename = Path(save_path) / file_name
+        download_image(url, full_filename)
+        file_list.append(full_filename)
+    return file_list
 
 
 def get_epic_images(nasa_token, save_path):
@@ -76,15 +80,17 @@ def get_epic_images(nasa_token, save_path):
                             params=params)
     response.raise_for_status()
     data = json.loads(response.content)
-    links_count = len(data)
+    file_list = []
     for num, item in enumerate(data, start=1):
         date_time_str = datetime.datetime.strptime(
                 item['date'], '%Y-%m-%d %H:%M:%S').strftime('%Y/%m/%d')
         link_to_img = f'https://api.nasa.gov/EPIC/archive/natural/' \
                       f'{date_time_str}/png/{data[0]["image"]}.png'
-        download_image(link_to_img, Path(save_path) / f'_EPIC{num}.png',
+        full_filename = f'_EPIC{num}.png'
+        download_image(link_to_img, Path(save_path) / full_filename,
                        params=params)
-        print(f'{num}/{links_count} image downloaded')
+        file_list.append(full_filename)
+    return file_list
 
 
 def get_launches_with_images(nasa_token):
@@ -95,10 +101,10 @@ def get_launches_with_images(nasa_token):
                             params=params)
     response.raise_for_status()
     data = json.loads(response.content)
-    ret_value = []
+    launch_list = []
     for item in enumerate(data):
         links_item = item[1]['links']['flickr']['original']
         if links_item:
-            ret_item = {'id': item[1]['id'], 'count': len(links_item)}
-            ret_value.append(ret_item)
-    return ret_value
+            launch_list_item = {'id': item[1]['id'], 'count': len(links_item)}
+            launch_list.append(launch_list_item)
+    return launch_list
