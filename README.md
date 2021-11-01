@@ -1,24 +1,38 @@
 # Проект hubble_telegram
 _ _ _
+Программа отправляет Telegram-пользователям случайные изображения с сайта NASA 
+на космическую тематику с заданной периодичностью.
+
+Имя telegram-бота [@devman-hubble](https://t.me/spacexhubble_bot)
+
 ### Зависимости
 ```
 requests==2.26.0
 python-telegram-bot==13.7
 python-decouple==3.5
 ```
+
+### Переменные окружения
+Переменная среды `DELIVERY_TIMEOUT` хранит периодичность отправки изображений
+пользователям Telegram в секундах. Если переменная не задана, то берётся
+значение 10.
+
 ## telegram_bot.py
 _ _ _
 При получении команды `/start` отправляет сообщение `Hi! I'm a bot 
 @devman_hubble!` и публикует одну случайную астрономическую картинку дня.
 
-_ _ _
+При получении команды `/hello` отправляет сообщение `Hi! I'm a bot 
+@devman_hubble!`.
+
 ## nasa.py
+_ _ _
 Содержит набор функций для скачивания: 
 1. Фотографий запусков космических кораблей компании [SpaceX](https://www.spacex.com/);
 2. Фотографий нашей планеты из космоса.
 
 ### Функции
-_ _ _
+
 #### download_image
 Скачивает картинку по `url` и сохраняет её с именем `full_filename`. 
 Если путь, заданный в `full_filename` не существует, то он создаётся.
@@ -40,7 +54,7 @@ from nasa import download_image
 download_image('https://apod.nasa.gov/apod/image/2107/LRVBPIX3M82Crop1024.jpg',
                Path(os.getcwd()) / 'testimg' / 'nasa_image.jpg')
 ```
-_ _ _
+
 #### get_launches_with_images
 В общем массиве информации о запусках компании 
 [SpaceX](https://www.spacex.com/) содержатся фотографии не для каждого запуска.
@@ -65,7 +79,7 @@ NASA_TOKEN = decouple.config('NASA_TOKEN', '')
 image_list = get_launches_with_images(NASA_TOKEN)
 print(*image_list, sep='\n')
 ```
-_ _ _
+
 #### fetch_spacex_launch
 Обращается к [NASA API](https://api.spacexdata.com/v4/launches/)
 по `id` запуска, скачивает всё имеющиеся в ответе картинки запуска и 
@@ -96,7 +110,7 @@ print(*image_list, sep='\n')
 image_list = fetch_spacex_launch(launch_list[1]['id'], 'c:\spacex')
 print(*image_list, sep='\n')
 ```
-_ _ _
+
 #### get_file_ext_from_url
 Возвращает расширение имени файла из переданного `url`
 
@@ -112,7 +126,7 @@ print(get_file_ext_from_url('https://apod.nasa.gov/apod/image/2107/LRVBPIX3M82Cr
 print(get_file_ext_from_url('https://google.com'))
 print(get_file_ext_from_url('google.com'))
 ```
-_ _ _
+
 #### get_apod_images
 Обращается к [NASA API](https://api.nasa.gov/) за указанным количеством 
 астрономических картинок дня
@@ -143,7 +157,7 @@ from nasa import get_apod_images
 image_list = get_apod_images(NASA_TOKEN, Path(os.getcwd()) / 'apod', 10)
 print(*image_list, sep='\n')
 ```
-_ _ _
+
 #### get_epic_images
 Обращается к [NASA API](https://api.nasa.gov/EPIC/api/natural?api_key=DEMO_KEY) 
 за фотографиями нашей планеты из космоса. Ответ на один запрос содержит 
