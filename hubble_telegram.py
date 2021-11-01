@@ -1,7 +1,5 @@
 import decouple
-import os
 
-from nasa import *
 from telegram_bot import start_bot
 
 
