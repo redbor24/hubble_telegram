@@ -9,8 +9,9 @@ from telegram.ext import CallbackContext, CommandHandler, Updater
 from nasa import get_apod_images
 
 NASA_TOKEN = decouple.config('NASA_TOKEN', '')
+TELEGRAM_TOKEN = decouple.config('TELEGRAM_TOKEN', '')
 CHAT_LIST_FILE_NAME = 'telebot.data'
-DELIVERY_TIMEOUT = int(os.getenv('DELIVERY_TIMEOUT', default=10))
+DELIVERY_TIMEOUT = int(os.getenv('DELIVERY_TIMEOUT', default=86400))
 IMAGES_SUB_PATH = 'images'
 chat_list = []
 
@@ -64,16 +65,16 @@ def save_chat_list():
         pickle.dump(chat_list, file_handle)
 
 
-def start_bot(telegram_token):
+def start_bot():
     global chat_list
-    updater = Updater(telegram_token)
+    updater = Updater(TELEGRAM_TOKEN)
     dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler('hello', on_hello))
     dispatcher.add_handler(CommandHandler('start', on_start))
     chat_list = load_chat_list()
 
     updater.job_queue.run_repeating(send_random_image,
-                                    interval=DELIVERY_TIMEOUT, first=5)
+                                    interval=DELIVERY_TIMEOUT, first=10)
 
     updater.start_polling()
     updater.idle()
