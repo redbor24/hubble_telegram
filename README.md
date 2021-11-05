@@ -1,6 +1,6 @@
 # Проект hubble_telegram
 
-Скрипт отправляет в Telegram-канал картинки на космическую тематику с 
+Скрипт отправляет в Telegram-канал картинку на космическую тематику с 
 заданной периодичностью.
 
 Имя telegram-бота [@devman-hubble](https://t.me/spacexhubble_bot)
@@ -56,6 +56,19 @@ pip3 install -r requirements.txt
 
   - `IMAGES_PATH` - путь для сохранения картинок (см. `.env`-файл).
 
+## hubble_telegram.py
+
+Отправляет в заданный Telegram-канал одну картинку из папки с заданной 
+периодичностью.
+
+- __Пример использования:__
+```
+from config import IMAGES_PATH, TELEGRAM_CHANNEL_NAME, TELEGRAM_TOKEN, \
+    DELIVERY_TIMEOUT
+
+send_images_to_telegram_channel(TELEGRAM_TOKEN, IMAGES_PATH,
+                                TELEGRAM_CHANNEL_NAME, DELIVERY_TIMEOUT)
+```
 ## space_images.py
 
 Содержит функции для скачивания:
@@ -132,17 +145,4 @@ from config import NASA_TOKEN, IMAGES_PATH
 
 
 get_epic_images(NASA_TOKEN, IMAGES_PATH)
-```
-
-## hubble_telegram.py
-
-Отправляет в заданный Telegram-канал одну картинку с заданной периодичностью.
-
-- __Пример использования:__
-```
-from config import IMAGES_PATH, TELEGRAM_CHANNEL_NAME, TELEGRAM_TOKEN, \
-    DELIVERY_TIMEOUT
-
-send_images_to_telegram_channel(TELEGRAM_TOKEN, IMAGES_PATH,
-                                TELEGRAM_CHANNEL_NAME, DELIVERY_TIMEOUT)
 ```
