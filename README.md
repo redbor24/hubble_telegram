@@ -1,7 +1,7 @@
 # Проект hubble_telegram
 
-Программа отправляет Telegram-пользователям случайные изображения с сайта NASA 
-на космическую тематику с заданной периодичностью.
+Скрипт отправляет в Telegram-канал картинки на космическую тематику с 
+заданной периодичностью.
 
 Имя telegram-бота [@devman-hubble](https://t.me/spacexhubble_bot)
 
@@ -17,134 +17,73 @@ python-decouple==3.5
 ```
 
 ### Установка
-Python должен быть установлен. Затем используйте pip (или pip3, есть есть 
-конфликт с Python2) для установки зависимостей:
+Python должен быть установлен. Затем используйте pip для установки зависимостей
+(или pip3, если есть конфликт с Python2):
 ```
 pip install -r requirements.txt
 ```
-### Окружение
-Переменная среды `DELIVERY_TIMEOUT` хранит периодичность в секундах отправки 
-изображений пользователям Telegram, кто создал чат с ботом. Если переменная 
-не задана, то берётся значение 86400 (одни сутки). Первая отправка выполняется 
-через 10 секунд после запуска бота.
+или
+```
+pip3 install -r requirements.txt
+```
 
-`.env` файл:
+### Файл `.env` 
 
-`NASA_TOKEN=<value>` - токен для работы с [NASA API](https://api.nasa.gov/), 
+  - `NASA_TOKEN=<value>` - токен для работы с [NASA API](https://api.nasa.gov/), 
 полученный при [регистрации](https://api.nasa.gov/#signUp);
 
-`TELEGRAM_TOKEN=<value>` - токен для работы с Telegram-API
-([получение токена](https://t.me/botfather)).
+  - `TELEGRAM_TOKEN=<value>` - токен для работы с Telegram-API
+([получение токена](https://t.me/botfather));
 
-## telegram_bot.py
+  - `DELIVERY_TIMEOUT=<value>` - периодичность отправки картинок в Telegram-канал в 
+секундах. Если переменная не задана, то берётся значение 86400 (одни сутки);
 
-При получении команды `/start` отправляет сообщение `Hi! I'm a bot 
-@devman_hubble!` и публикует одну случайную астрономическую картинку дня.
+  - `TELEGRAM_CHANNEL_NAME=<value>` - имя Telegram-канала для отправки картинок.
 
-При получении команды `/hello` отправляет сообщение `Hi! I'm a bot 
-@devman_hubble!`.
+  - `IMAGES_PATH` - абсолютный или относительный путь для сохранения картинок.
 
-## nasa.py
+### config.py
+Содержит объявление глобальных переменных, необходимых для работы скрипта:
 
-Содержит набор функций для скачивания: 
+  - `NASA_TOKEN` - токен для работы с NASA API (см. `.env`-файл);
+
+  - `TELEGRAM_TOKEN` - токен для работы с Telegram (см. `.env`-файл);
+
+  - `DELIVERY_TIMEOUT` - периодичность отправки картинок в Telegran-канал (см. 
+`.env`-файл);
+
+  - `TELEGRAM_CHANNEL_NAME` - имя Telegram-канала (см. `.env`-файл);
+
+  - `IMAGES_PATH` - путь для сохранения картинок (см. `.env`-файл).
+
+## space_images.py
+
+Содержит функции для скачивания:
 1. Фотографий запусков космических кораблей компании 
 [SpaceX](https://www.spacex.com/);
-2. Фотографий нашей планеты из космоса.
+2. Фотографий нашей планеты из космоса;
+3. Астрономических картинок дня.
 
 ### Функции
 
-#### download_image
-Скачивает картинку по `url` и сохраняет её с именем `full_filename`. 
-Если путь, заданный в `full_filename` не существует, то он создаётся.
-
-+ __Параметры:__
-
-    `url` картинки;
-
-    `full_filename` полное имя файла;
-
-    `params` словарь для передачи в секцию `params` get-запроса. Необязательный 
-  параметр.
-
-- __Вызов:__
-```
-from nasa import download_image 
-
-
-download_image('https://apod.nasa.gov/apod/image/2107/LRVBPIX3M82Crop1024.jpg',
-               Path(os.getcwd()) / 'testimg' / 'nasa_image.jpg')
-```
-
-#### get_launches_with_images
-В общем массиве информации о запусках компании 
-[SpaceX](https://www.spacex.com/) содержатся фотографии не для каждого запуска.
-Функция отбирает запуски, у которых имеются ссылки на изображения и 
-возвращает их список с количеством ссылок на изображения для каждого запуска.
-
-+ __Параметры:__
-
-    `nasa_token` - токен для работы с [NASA API](https://api.nasa.gov/), 
-полученный при [регистрации](https://api.nasa.gov/#signUp)
-
-- __Возвращает:__
-    Cписок словарей `id, count`, где `id` - id запуска, `count` - 
-количество изображений.
-
-- __Вызов:__
-```
-from nasa import get_launches_with_images
-
-
-NASA_TOKEN = decouple.config('NASA_TOKEN', '')
-image_list = get_launches_with_images(NASA_TOKEN)
-print(*image_list, sep='\n')
-```
-
-#### fetch_spacex_launch
-Обращается к [NASA API](https://api.spacexdata.com/v4/launches/)
-по `id` запуска, скачивает всё имеющиеся в ответе картинки запуска и 
-сохраняет их в `save_path` под именами `spacex1.jpg`, `spacex2.jpg`, ...,
-`spacexN.jpg`.
+#### get_spacex_images
+Скачивает все доступные фотографии запусков космических аппаратов компании 
+[SpaceX](https://www.spacex.com/).
 
 - __Параметры:__
   
-    `launch_id` запуска космического корабля SpaceX. Выбирается из результата 
-    выполнения функции `get_launches_with_images`;
+    `nasa_token` - токен для работы с [NASA API](https://api.nasa.gov/), 
+полученный при [регистрации](https://api.nasa.gov/#signUp);
 
-    `save_path` абсолютный путь для сохранения картинок.
-
-
-- __Возвращает:__
-    Список имён файлов сохранённых изображений с полными путями
+    `save_path` - абсолютный путь для сохранения картинок.
 
 
 - __Вызов:__
 ```
-from nasa import get_launches_with_images, fetch_spacex_launch 
+from config import NASA_TOKEN, IMAGES_PATH
 
 
-NASA_TOKEN = decouple.config('NASA_TOKEN', '')
-launch_list = get_launches_with_images(NASA_TOKEN)
-image_list = fetch_spacex_launch(launch_list[0]['id'], Path(os.getcwd()) / 'spacex')
-print(*image_list, sep='\n')
-image_list = fetch_spacex_launch(launch_list[1]['id'], 'c:\spacex')
-print(*image_list, sep='\n')
-```
-
-#### get_file_ext_from_url
-Возвращает расширение имени файла из переданного `url`
-
-- __Параметры:__
-    `url`
-
-- __Вызов:__
-```
-from nasa import get_file_ext_from_url 
-
-
-print(get_file_ext_from_url('https://apod.nasa.gov/apod/image/2107/LRVBPIX3M82Crop1024.jpg'))
-print(get_file_ext_from_url('https://google.com'))
-print(get_file_ext_from_url('google.com'))
+get_spacex_images(NASA_TOKEN, IMAGES_PATH)
 ```
 
 #### get_apod_images
@@ -157,25 +96,20 @@ print(get_file_ext_from_url('google.com'))
 
 - __Параметры:__
     
-    `nasa_token` - токен для работы с [NASA API](https://api.nasa.gov/), 
+  - `nasa_token` - токен для работы с [NASA API](https://api.nasa.gov/), 
 полученный при [регистрации](https://api.nasa.gov/#signUp);
 
-    `save_path` - полный путь для сохранения картинок;
+  - `save_path` - полный путь для сохранения картинок;
 
-    `image_count` - количество картинок для получения.
-
-
-- __Возвращает:__
-    Список имён файлов сохранённых изображений с полными путями
+  - `image_count` - количество картинок для получения.
 
 
 - __Вызов:__
 ```
-from nasa import get_apod_images 
+from config import NASA_TOKEN, IMAGES_PATH
 
 
-image_list = get_apod_images(NASA_TOKEN, Path(os.getcwd()) / 'apod', 10)
-print(*image_list, sep='\n')
+get_apod_images(NASA_TOKEN, IMAGES_PATH)
 ```
 
 #### get_epic_images
@@ -186,18 +120,29 @@ print(*image_list, sep='\n')
 
 - __Параметры:__
 
-    `nasa_token` - токен для работы с [NASA API](https://api.nasa.gov/#epic), 
+  - `nasa_token` - токен для работы с [NASA API](https://api.nasa.gov/#epic), 
 полученный при [регистрации](https://api.nasa.gov/#signUp);
 
-    `save_path` - полный путь для сохранения картинок.
-
-
-- __Возвращает:__
-    Список имён файлов сохранённых изображений с полными путями
+  - `save_path` - полный путь для сохранения картинок.
 
 
 - __Пример вызова:__
 ```
-image_list = get_epic_images(NASA_TOKEN, Path(os.getcwd()) / 'epic')
-print(*image_list, sep='\n')
+from config import NASA_TOKEN, IMAGES_PATH
+
+
+get_epic_images(NASA_TOKEN, IMAGES_PATH)
+```
+
+## hubble_telegram.py
+
+Отправляет в заданный Telegram-канал одну картинку с заданной периодичностью.
+
+- __Пример использования:__
+```
+from config import IMAGES_PATH, TELEGRAM_CHANNEL_NAME, TELEGRAM_TOKEN, \
+    DELIVERY_TIMEOUT
+
+send_images_to_telegram_channel(TELEGRAM_TOKEN, IMAGES_PATH,
+                                TELEGRAM_CHANNEL_NAME, DELIVERY_TIMEOUT)
 ```
