@@ -27,6 +27,12 @@ pip install -r requirements.txt
 pip3 install -r requirements.txt
 ```
 
+### Переменные окружения
+
+  - `DELIVERY_TIMEOUT=<value>` - периодичность отправки картинок в Telegram-канал в 
+секундах. Если переменная не задана, то берётся значение 86400 (одни сутки)
+
+
 ### Файл `.env` 
 
   - `NASA_TOKEN=<value>` - токен для работы с [NASA API](https://api.nasa.gov/), 
@@ -35,12 +41,10 @@ pip3 install -r requirements.txt
   - `TELEGRAM_TOKEN=<value>` - токен для работы с Telegram-API
 ([получение токена](https://t.me/botfather));
 
-  - `DELIVERY_TIMEOUT=<value>` - периодичность отправки картинок в Telegram-канал в 
-секундах. Если переменная не задана, то берётся значение 86400 (одни сутки);
-
   - `TELEGRAM_CHANNEL_NAME=<value>` - имя Telegram-канала для отправки картинок.
 
-  - `IMAGES_PATH` - абсолютный или относительный путь для сохранения картинок.
+  - `IMAGES_PATH` - абсолютный или относительный (от места запуска скрипта) 
+путь для сохранения картинок.
 
 ### config.py
 Содержит объявление глобальных переменных, необходимых для работы скрипта:
@@ -49,8 +53,8 @@ pip3 install -r requirements.txt
 
   - `TELEGRAM_TOKEN` - токен для работы с Telegram (см. `.env`-файл);
 
-  - `DELIVERY_TIMEOUT` - периодичность отправки картинок в Telegran-канал (см. 
-`.env`-файл);
+  - `DELIVERY_TIMEOUT` - периодичность отправки картинок в Telegram-канал (см. 
+Переменные окружения);
 
   - `TELEGRAM_CHANNEL_NAME` - имя Telegram-канала (см. `.env`-файл);
 
