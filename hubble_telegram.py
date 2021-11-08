@@ -16,7 +16,7 @@ def send_images_to_telegram_channel(telegram_token, images_path,
                                     telegram_channel_name, delivery_timeout):
     bot = Bot(telegram_token)
     try:
-        while 1 == 1:
+        while True:
             for filename in os.listdir(images_path):
                 with open(
                     Path(os.getcwd()) / images_path / filename, 'rb'

@@ -53,7 +53,7 @@ def get_epic_images(nasa_token, save_path):
             '%Y-%m-%d %H:%M:%S'
         ).strftime('%Y/%m/%d')
 
-        img_link = f'https://api.nasa.gov/EPIC/archive/natural/' \
+        img_link = 'https://api.nasa.gov/EPIC/archive/natural/' \
             f'{filename_time_part}/png/{epic_data["image"]}.png'
 
         download_image(
