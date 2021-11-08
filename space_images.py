@@ -5,8 +5,24 @@ from urllib import parse
 
 import requests
 
-from tools import download_image, get_file_ext_from_url
 from config import IMAGES_PATH, NASA_TOKEN
+
+
+def download_image(url, full_filename, params=None):
+    headers = {
+        'User-Agent': 'curl',
+        'Accept-Language': 'ru-RU'
+    }
+
+    response = requests.get(url, headers=headers, params=params)
+    response.raise_for_status()
+
+    with open(full_filename, 'wb') as file:
+        file.write(response.content)
+
+
+def get_file_ext_from_url(url):
+    return Path(parse.unquote(parse.urlparse(url).path)).suffix
 
 
 def get_apod_images(nasa_token, save_path, image_count):
