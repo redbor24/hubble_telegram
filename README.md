@@ -15,7 +15,6 @@ requests==2.26.0
 python-telegram-bot==13.7
 python-decouple==3.5
 ```
-
 ### Установка
 Python должен быть установлен. Затем используйте pip для установки зависимостей
 (или pip3, если есть конфликт с Python2):
@@ -46,6 +45,14 @@ pip3 install -r requirements.txt
   - `IMAGES_PATH` - абсолютный или относительный (от места запуска скрипта) 
 путь для сохранения картинок.
 
+### Запуск
+
+```
+python hubble_telegram.py
+```
+
+## Модули
+
 ### config.py
 Содержит объявление глобальных переменных, необходимых для работы скрипта:
 
@@ -60,7 +67,7 @@ pip3 install -r requirements.txt
 
   - `IMAGES_PATH` - путь для сохранения картинок (см. `.env`-файл).
 
-## hubble_telegram.py
+### hubble_telegram.py
 
 Отправляет в заданный Telegram-канал одну картинку из папки с заданной 
 периодичностью.
@@ -73,7 +80,7 @@ from config import IMAGES_PATH, TELEGRAM_CHANNEL_NAME, TELEGRAM_TOKEN, \
 send_images_to_telegram_channel(TELEGRAM_TOKEN, IMAGES_PATH,
                                 TELEGRAM_CHANNEL_NAME, DELIVERY_TIMEOUT)
 ```
-## space_images.py
+### space_images.py
 
 Содержит функции для скачивания:
 1. Фотографий запусков космических кораблей компании 
@@ -81,9 +88,9 @@ send_images_to_telegram_channel(TELEGRAM_TOKEN, IMAGES_PATH,
 2. Фотографий нашей планеты из космоса;
 3. Астрономических картинок дня.
 
-### Функции
+#### Функции
 
-#### get_spacex_images
+###### get_spacex_images
 Скачивает все доступные фотографии запусков космических аппаратов компании 
 [SpaceX](https://www.spacex.com/).
 
@@ -103,7 +110,7 @@ from config import NASA_TOKEN, IMAGES_PATH
 get_spacex_images(NASA_TOKEN, IMAGES_PATH)
 ```
 
-#### get_apod_images
+###### get_apod_images
 Обращается к [NASA API](https://api.nasa.gov/) за указанным количеством 
 астрономических картинок дня
 ([APOD - Astronomy Picture of the Day](https://api.nasa.gov/#apod)),
@@ -129,7 +136,7 @@ from config import NASA_TOKEN, IMAGES_PATH
 get_apod_images(NASA_TOKEN, IMAGES_PATH)
 ```
 
-#### get_epic_images
+###### get_epic_images
 Обращается к [NASA API](https://api.nasa.gov/EPIC/api/natural?api_key=DEMO_KEY) 
 за фотографиями нашей планеты из космоса. Ответ на один запрос содержит 
 несколько ссылок на фотографии. Функция скачивает их все и 
