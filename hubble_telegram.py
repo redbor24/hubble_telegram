@@ -4,6 +4,9 @@ from time import sleep
 
 from telegram import error, Bot
 
+from config import (DELIVERY_TIMEOUT, IMAGES_PATH, TELEGRAM_CHANNEL_NAME,
+                    TELEGRAM_TOKEN)
+
 
 def send_images_to_telegram_channel(telegram_token, images_path,
                                     telegram_channel_name, delivery_timeout):
@@ -20,8 +23,5 @@ def send_images_to_telegram_channel(telegram_token, images_path,
 
 
 if __name__ == '__main__':
-    from config import (DELIVERY_TIMEOUT, IMAGES_PATH, TELEGRAM_CHANNEL_NAME,
-                        TELEGRAM_TOKEN)
-
     send_images_to_telegram_channel(TELEGRAM_TOKEN, IMAGES_PATH,
                                     TELEGRAM_CHANNEL_NAME, DELIVERY_TIMEOUT)

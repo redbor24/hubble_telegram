@@ -5,6 +5,7 @@ from urllib import parse
 import requests
 
 from tools import download_image, get_file_ext_from_url
+from config import IMAGES_PATH, NASA_TOKEN
 
 
 def get_apod_images(nasa_token, save_path, image_count):
@@ -68,8 +69,6 @@ def get_spacex_images(nasa_token, save_path):
 
 
 if __name__ == '__main__':
-    from config import IMAGES_PATH, NASA_TOKEN
-
     get_apod_images(NASA_TOKEN, IMAGES_PATH, 3)
     get_epic_images(NASA_TOKEN, IMAGES_PATH)
     get_spacex_images(NASA_TOKEN, IMAGES_PATH)
