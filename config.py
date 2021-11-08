@@ -1,15 +1,15 @@
-from os import getcwd, getenv, environ
+from os import getcwd, getenv
 from pathlib import Path
 
-import decouple
+from decouple import config
 
 
-NASA_TOKEN = decouple.config('NASA_TOKEN', '')
-TELEGRAM_TOKEN = decouple.config('TELEGRAM_TOKEN', '')
+NASA_TOKEN = config('NASA_TOKEN', '')
+TELEGRAM_TOKEN = config('TELEGRAM_TOKEN', '')
 DELIVERY_TIMEOUT = int(getenv('DELIVERY_TIMEOUT', '86400'))
-TELEGRAM_CHANNEL_NAME = decouple.config('TELEGRAM_CHANNEL_NAME', '')
+TELEGRAM_CHANNEL_NAME = config('TELEGRAM_CHANNEL_NAME', '')
 
-_ = decouple.config('IMAGES_PATH', 'images')
+_ = config('IMAGES_PATH', 'images')
 if not Path(_).is_absolute():
     IMAGES_PATH = Path(getcwd()) / _
 else:
