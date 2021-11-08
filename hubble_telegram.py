@@ -14,9 +14,10 @@ def send_images_to_telegram_channel(telegram_token, images_path,
     try:
         while 1 == 1:
             for file in os.listdir(images_path):
-                bot.send_document(chat_id=telegram_channel_name,
-                                  document=open(Path(os.getcwd()) /
-                                                images_path / file, 'rb'))
+                with open(Path(os.getcwd()) / images_path / file, 'rb') as \
+                        img_file:
+                    bot.send_document(chat_id=telegram_channel_name,
+                                      document=img_file)
                 sleep(delivery_timeout)
     except error.BadRequest as e:
         print(f'Ошибка Telegram! {e}')
