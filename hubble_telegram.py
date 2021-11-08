@@ -2,13 +2,12 @@ import os
 from pathlib import Path
 from time import sleep
 
-import telegram
-from telegram import error
+from telegram import error, Bot
 
 
 def send_images_to_telegram_channel(telegram_token, images_path,
                                     telegram_channel_name, delivery_timeout):
-    bot = telegram.Bot(telegram_token)
+    bot = Bot(telegram_token)
     try:
         while 1 == 1:
             for file in os.listdir(images_path):
