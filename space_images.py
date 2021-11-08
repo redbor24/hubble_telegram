@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from pathlib import Path
 from urllib import parse
 
@@ -20,13 +20,13 @@ def get_apod_images(nasa_token, save_path, image_count):
     resp = requests.get('https://api.nasa.gov/planetary/apod', params=params)
     resp.raise_for_status()
 
-    for num, item in enumerate(resp.json(), start=1):
-        if get_file_ext_from_url(item['url']):
-            url, file_name = item['url'], \
-                             Path(parse.unquote(parse.urlparse(item['url']).
-                                                path)).name
+    for num, apod_data in enumerate(resp.json(), start=1):
+        if get_file_ext_from_url(apod_data['url']):
+            url = apod_data['url']
+            file_name = Path(parse.unquote(parse.urlparse(
+                    apod_data['url']).path)).name
         else:
-            url, file_name = item['thumbnail_url'], f'APOD{num}.jpg'
+            url, file_name = apod_data['thumbnail_url'], f'APOD{num}.jpg'
         download_image(url, Path(save_path) / file_name)
 
 
@@ -40,11 +40,12 @@ def get_epic_images(nasa_token, save_path):
     resp = requests.get('https://api.nasa.gov/EPIC/api/natural/images',
                         params=params)
     resp.raise_for_status()
-    for num, item in enumerate(resp.json(), start=1):
-        filename_time_part = datetime.datetime.strptime(
-                item['date'], '%Y-%m-%d %H:%M:%S').strftime('%Y/%m/%d')
+
+    for num, epic_data in enumerate(resp.json(), start=1):
+        filename_time_part = datetime.strptime(
+            epic_data['date'], '%Y-%m-%d %H:%M:%S').strftime('%Y/%m/%d')
         img_link = f'https://api.nasa.gov/EPIC/archive/natural/' \
-                   f'{filename_time_part}/png/{item["image"]}.png'
+                   f'{filename_time_part}/png/{epic_data["image"]}.png'
         download_image(img_link, Path(save_path) / f'EPIC{num}.png',
                        params=params)
 
@@ -57,14 +58,16 @@ def get_spacex_images(nasa_token, save_path):
         'api_key': nasa_token
     }
 
-    resp = requests.get('https://api.spacexdata.com/v4/launches', params=params)
+    resp = requests.get('https://api.spacexdata.com/v4/launches',
+                        params=params)
     resp.raise_for_status()
 
-    for item in enumerate(resp.json()):
-        links_item = item[1]['links']['flickr']['original']
+    for launch_data in enumerate(resp.json()):
+        links_item = launch_data[1]['links']['flickr']['original']
         if links_item:
             for link in enumerate(links_item):
-                filename = Path(save_path) / f'spacex{item[0]}{link[0]}.jpg'
+                filename = Path(save_path) / f'spacex{launch_data[0]}' \
+                                             f'{link[0]}.jpg'
                 download_image(link[1], filename)
 
 
