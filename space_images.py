@@ -17,16 +17,21 @@ def get_apod_images(nasa_token, save_path, image_count):
         'count': image_count,
         'thumbs': True
     }
-    resp = requests.get('https://api.nasa.gov/planetary/apod', params=params)
+    resp = requests.get(
+        'https://api.nasa.gov/planetary/apod',
+        params=params
+    )
     resp.raise_for_status()
 
     for num, apod_data in enumerate(resp.json(), start=1):
         if get_file_ext_from_url(apod_data['url']):
             url = apod_data['url']
-            file_name = Path(parse.unquote(parse.urlparse(
-                    apod_data['url']).path)).name
+            file_name = Path(
+                parse.unquote(parse.urlparse(apod_data['url']).path)
+            ).name
         else:
-            url, file_name = apod_data['thumbnail_url'], f'APOD{num}.jpg'
+            url = apod_data['thumbnail_url']
+            file_name = f'APOD{num}.jpg'
         download_image(url, Path(save_path) / file_name)
 
 
@@ -36,17 +41,26 @@ def get_epic_images(nasa_token, save_path):
     params = {
         'api_key': nasa_token
     }
-    resp = requests.get('https://api.nasa.gov/EPIC/api/natural/images',
-                        params=params)
+    resp = requests.get(
+        'https://api.nasa.gov/EPIC/api/natural/images',
+        params=params
+    )
     resp.raise_for_status()
 
     for num, epic_data in enumerate(resp.json(), start=1):
         filename_time_part = datetime.strptime(
-            epic_data['date'], '%Y-%m-%d %H:%M:%S').strftime('%Y/%m/%d')
+            epic_data['date'],
+            '%Y-%m-%d %H:%M:%S'
+        ).strftime('%Y/%m/%d')
+
         img_link = f'https://api.nasa.gov/EPIC/archive/natural/' \
-                   f'{filename_time_part}/png/{epic_data["image"]}.png'
-        download_image(img_link, Path(save_path) / f'EPIC{num}.png',
-                       params=params)
+            f'{filename_time_part}/png/{epic_data["image"]}.png'
+
+        download_image(
+            img_link,
+            Path(save_path) / f'EPIC{num}.png',
+            params=params
+        )
 
 
 def get_spacex_images(nasa_token, save_path):
@@ -55,8 +69,10 @@ def get_spacex_images(nasa_token, save_path):
         'api_key': nasa_token
     }
 
-    resp = requests.get('https://api.spacexdata.com/v4/launches',
-                        params=params)
+    resp = requests.get(
+        'https://api.spacexdata.com/v4/launches',
+        params=params
+    )
     resp.raise_for_status()
 
     for launch_data in enumerate(resp.json()):
@@ -64,7 +80,7 @@ def get_spacex_images(nasa_token, save_path):
         if links_item:
             for link in enumerate(links_item):
                 filename = Path(save_path) / f'spacex{launch_data[0]}' \
-                                             f'{link[0]}.jpg'
+                    f'{link[0]}.jpg'
                 download_image(link[1], filename)
 
 
