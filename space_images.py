@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 from pathlib import Path
 from urllib import parse
 
@@ -9,8 +10,7 @@ from config import IMAGES_PATH, NASA_TOKEN
 
 
 def get_apod_images(nasa_token, save_path, image_count):
-    if not save_path.is_dir():
-        save_path.mkdir(parents=True)
+    os.makedirs(save_path, exist_ok=True)
 
     params = {
         'api_key': nasa_token,
@@ -31,8 +31,7 @@ def get_apod_images(nasa_token, save_path, image_count):
 
 
 def get_epic_images(nasa_token, save_path):
-    if not save_path.is_dir():
-        save_path.mkdir(parents=True)
+    os.makedirs(save_path, exist_ok=True)
 
     params = {
         'api_key': nasa_token
@@ -51,9 +50,7 @@ def get_epic_images(nasa_token, save_path):
 
 
 def get_spacex_images(nasa_token, save_path):
-    if not save_path.is_dir():
-        save_path.mkdir(parents=True)
-
+    os.makedirs(save_path, exist_ok=True)
     params = {
         'api_key': nasa_token
     }
