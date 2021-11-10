@@ -26,8 +26,8 @@ def get_file_ext_from_url(url):
     return Path(parse.unquote(_)).suffix
 
 
-def get_apod_images(nasa_token, save_path, image_count):
-    os.makedirs(save_path, exist_ok=True)
+def get_apod_images(nasa_token, images_path, image_count):
+    os.makedirs(images_path, exist_ok=True)
 
     params = {
         'api_key': nasa_token,
@@ -48,11 +48,11 @@ def get_apod_images(nasa_token, save_path, image_count):
         else:
             url = apod['thumbnail_url']
             file_name = f'APOD{num}.jpg'
-        download_image(url, Path(save_path) / file_name)
+        download_image(url, Path(images_path) / file_name)
 
 
-def get_epic_images(nasa_token, save_path):
-    os.makedirs(save_path, exist_ok=True)
+def get_epic_images(nasa_token, images_path):
+    os.makedirs(images_path, exist_ok=True)
 
     params = {
         'api_key': nasa_token
@@ -74,13 +74,13 @@ def get_epic_images(nasa_token, save_path):
 
         download_image(
             img_link,
-            Path(save_path) / f'EPIC{num}.png',
+            Path(images_path) / f'EPIC{num}.png',
             params=params
         )
 
 
-def get_spacex_images(save_path):
-    os.makedirs(save_path, exist_ok=True)
+def get_spacex_images(images_path):
+    os.makedirs(images_path, exist_ok=True)
     resp = requests.get(
         'https://api.spacexdata.com/v4/launches',
     )
@@ -90,12 +90,12 @@ def get_spacex_images(save_path):
         links_item = launch[1]['links']['flickr']['original']
         if links_item:
             for link in enumerate(links_item):
-                filename = Path(save_path) / f'spacex{launch[0]}' \
+                filename = Path(images_path) / f'spacex{launch[0]}' \
                     f'{link[0]}.jpg'
                 download_image(link[1], filename)
 
 
 if __name__ == '__main__':
-    get_apod_images(NASA_TOKEN, IMAGES_PATH, 3)
+    get_apod_images(NASA_TOKEN, IMAGES_PATH, 2)
     get_epic_images(NASA_TOKEN, IMAGES_PATH)
     get_spacex_images(IMAGES_PATH)
