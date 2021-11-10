@@ -26,7 +26,7 @@ def get_file_ext_from_url(url):
     return Path(parse.unquote(_)).suffix
 
 
-def get_apod_images(nasa_token, images_path, image_count):
+def download_apod_images(nasa_token, images_path, image_count):
     os.makedirs(images_path, exist_ok=True)
 
     params = {
@@ -51,7 +51,7 @@ def get_apod_images(nasa_token, images_path, image_count):
         download_image(url, Path(images_path) / file_name)
 
 
-def get_epic_images(nasa_token, images_path):
+def download_epic_images(nasa_token, images_path):
     os.makedirs(images_path, exist_ok=True)
 
     params = {
@@ -79,7 +79,7 @@ def get_epic_images(nasa_token, images_path):
         )
 
 
-def get_spacex_images(images_path):
+def download_spacex_images(images_path):
     os.makedirs(images_path, exist_ok=True)
     resp = requests.get(
         'https://api.spacexdata.com/v4/launches',
@@ -96,6 +96,6 @@ def get_spacex_images(images_path):
 
 
 if __name__ == '__main__':
-    get_apod_images(NASA_TOKEN, IMAGES_PATH, 2)
-    get_epic_images(NASA_TOKEN, IMAGES_PATH)
-    get_spacex_images(IMAGES_PATH)
+    download_apod_images(NASA_TOKEN, IMAGES_PATH, 2)
+    download_epic_images(NASA_TOKEN, IMAGES_PATH)
+    download_spacex_images(IMAGES_PATH)

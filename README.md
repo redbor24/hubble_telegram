@@ -54,18 +54,18 @@ python hubble_telegram.py
 ## Модули
 
 ### config.py
-Содержит объявление глобальных переменных, необходимых для работы скрипта:
+Содержит объявление глобальных переменных, необходимых для работы скрипта
+ (см. `.env`-файл):
 
-  - `NASA_TOKEN` - токен для работы с NASA API (см. `.env`-файл);
+  - `NASA_TOKEN` - токен для работы с NASA API;
 
-  - `TELEGRAM_TOKEN` - токен для работы с Telegram (см. `.env`-файл);
+  - `TELEGRAM_TOKEN` - токен для работы с Telegram;
 
-  - `DELIVERY_TIMEOUT` - периодичность отправки картинок в Telegram-канал (см. 
-Переменные окружения);
+  - `DELIVERY_TIMEOUT` - периодичность отправки картинок в Telegram-канал;
 
-  - `TELEGRAM_CHANNEL_NAME` - имя Telegram-канала (см. `.env`-файл);
+  - `TELEGRAM_CHANNEL_NAME` - имя Telegram-канала;
 
-  - `IMAGES_PATH` - путь для сохранения картинок (см. `.env`-файл).
+  - `IMAGES_PATH` - путь для сохранения картинок.
 
 ### hubble_telegram.py
 
@@ -90,27 +90,24 @@ send_images_to_telegram_channel(TELEGRAM_TOKEN, IMAGES_PATH,
 
 #### Функции
 
-###### get_spacex_images
+###### download_spacex_images
 Скачивает все доступные фотографии запусков космических аппаратов компании 
 [SpaceX](https://www.spacex.com/).
 
 - __Параметры:__
   
-    `nasa_token` - токен для работы с [NASA API](https://api.nasa.gov/), 
-полученный при [регистрации](https://api.nasa.gov/#signUp);
-
-    `save_path` - абсолютный путь для сохранения картинок.
+    `images_path` - полный путь для сохранения картинок.
 
 
 - __Вызов:__
 ```
-from config import NASA_TOKEN, IMAGES_PATH
+from config import IMAGES_PATH
 
 
-get_spacex_images(NASA_TOKEN, IMAGES_PATH)
+download_spacex_images(IMAGES_PATH)
 ```
 
-###### get_apod_images
+###### download_apod_images
 Обращается к [NASA API](https://api.nasa.gov/) за указанным количеством 
 астрономических картинок дня
 ([APOD - Astronomy Picture of the Day](https://api.nasa.gov/#apod)),
@@ -123,7 +120,7 @@ get_spacex_images(NASA_TOKEN, IMAGES_PATH)
   - `nasa_token` - токен для работы с [NASA API](https://api.nasa.gov/), 
 полученный при [регистрации](https://api.nasa.gov/#signUp);
 
-  - `save_path` - полный путь для сохранения картинок;
+  - `images_path` - полный путь для сохранения картинок;
 
   - `image_count` - количество картинок для получения.
 
@@ -133,10 +130,10 @@ get_spacex_images(NASA_TOKEN, IMAGES_PATH)
 from config import NASA_TOKEN, IMAGES_PATH
 
 
-get_apod_images(NASA_TOKEN, IMAGES_PATH)
+download_apod_images(NASA_TOKEN, IMAGES_PATH)
 ```
 
-###### get_epic_images
+###### download_epic_images
 Обращается к [NASA API](https://api.nasa.gov/EPIC/api/natural?api_key=DEMO_KEY) 
 за фотографиями нашей планеты из космоса. Ответ на один запрос содержит 
 несколько ссылок на фотографии. Функция скачивает их все и 
@@ -147,7 +144,7 @@ get_apod_images(NASA_TOKEN, IMAGES_PATH)
   - `nasa_token` - токен для работы с [NASA API](https://api.nasa.gov/#epic), 
 полученный при [регистрации](https://api.nasa.gov/#signUp);
 
-  - `save_path` - полный путь для сохранения картинок.
+  - `images_path` - полный путь для сохранения картинок.
 
 
 - __Пример вызова:__
@@ -155,5 +152,5 @@ get_apod_images(NASA_TOKEN, IMAGES_PATH)
 from config import NASA_TOKEN, IMAGES_PATH
 
 
-get_epic_images(NASA_TOKEN, IMAGES_PATH)
+download_epic_images(NASA_TOKEN, IMAGES_PATH)
 ```
