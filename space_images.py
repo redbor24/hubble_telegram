@@ -39,14 +39,14 @@ def get_apod_images(nasa_token, save_path, image_count):
     )
     resp.raise_for_status()
 
-    for num, apod_data in enumerate(resp.json(), start=1):
-        if get_file_ext_from_url(apod_data['url']):
-            url = apod_data['url']
+    for num, apod in enumerate(resp.json(), start=1):
+        if get_file_ext_from_url(apod['url']):
+            url = apod['url']
             file_name = Path(
-                parse.unquote(parse.urlparse(apod_data['url']).path)
+                parse.unquote(parse.urlparse(apod['url']).path)
             ).name
         else:
-            url = apod_data['thumbnail_url']
+            url = apod['thumbnail_url']
             file_name = f'APOD{num}.jpg'
         download_image(url, Path(save_path) / file_name)
 
@@ -63,14 +63,14 @@ def get_epic_images(nasa_token, save_path):
     )
     resp.raise_for_status()
 
-    for num, epic_data in enumerate(resp.json(), start=1):
+    for num, epic in enumerate(resp.json(), start=1):
         filename_time_part = datetime.strptime(
-            epic_data['date'],
+            epic['date'],
             '%Y-%m-%d %H:%M:%S'
         ).strftime('%Y/%m/%d')
 
         img_link = 'https://api.nasa.gov/EPIC/archive/natural/' \
-            f'{filename_time_part}/png/{epic_data["image"]}.png'
+            f'{filename_time_part}/png/{epic["image"]}.png'
 
         download_image(
             img_link,
@@ -86,16 +86,16 @@ def get_spacex_images(save_path):
     )
     resp.raise_for_status()
 
-    for launch_data in enumerate(resp.json()):
-        links_item = launch_data[1]['links']['flickr']['original']
+    for launch in enumerate(resp.json()):
+        links_item = launch[1]['links']['flickr']['original']
         if links_item:
             for link in enumerate(links_item):
-                filename = Path(save_path) / f'spacex{launch_data[0]}' \
+                filename = Path(save_path) / f'spacex{launch[0]}' \
                     f'{link[0]}.jpg'
                 download_image(link[1], filename)
 
 
 if __name__ == '__main__':
-    # get_apod_images(NASA_TOKEN, IMAGES_PATH, 3)
-    # get_epic_images(NASA_TOKEN, IMAGES_PATH)
+    get_apod_images(NASA_TOKEN, IMAGES_PATH, 3)
+    get_epic_images(NASA_TOKEN, IMAGES_PATH)
     get_spacex_images(IMAGES_PATH)
