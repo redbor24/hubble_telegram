@@ -22,7 +22,8 @@ def download_image(url, full_filename, params=None):
 
 
 def get_file_ext_from_url(url):
-    return Path(parse.unquote(parse.urlparse(url).path)).suffix
+    _ = parse.urlparse(url).path
+    return Path(parse.unquote(_)).suffix
 
 
 def get_apod_images(nasa_token, save_path, image_count):
@@ -42,9 +43,8 @@ def get_apod_images(nasa_token, save_path, image_count):
     for num, apod in enumerate(resp.json(), start=1):
         if get_file_ext_from_url(apod['url']):
             url = apod['url']
-            file_name = Path(
-                parse.unquote(parse.urlparse(apod['url']).path)
-            ).name
+            _ = parse.urlparse(apod['url']).path
+            file_name = Path(parse.unquote(_)).name
         else:
             url = apod['thumbnail_url']
             file_name = f'APOD{num}.jpg'
