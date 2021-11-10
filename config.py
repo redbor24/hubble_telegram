@@ -1,4 +1,4 @@
-from os import getcwd, getenv
+from os import getcwd
 from pathlib import Path
 
 from decouple import config
@@ -6,7 +6,7 @@ from decouple import config
 
 NASA_TOKEN = config('NASA_TOKEN', '')
 TELEGRAM_TOKEN = config('TELEGRAM_TOKEN', '')
-DELIVERY_TIMEOUT = int(getenv('DELIVERY_TIMEOUT', '86400'))
+DELIVERY_TIMEOUT = int(config('DELIVERY_TIMEOUT', '86400'))
 TELEGRAM_CHANNEL_NAME = config('TELEGRAM_CHANNEL_NAME', '')
 
 _ = config('IMAGES_PATH', 'images')
