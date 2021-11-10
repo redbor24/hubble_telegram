@@ -86,13 +86,13 @@ def get_spacex_images(images_path):
     )
     resp.raise_for_status()
 
-    for launch in enumerate(resp.json()):
-        links_item = launch[1]['links']['flickr']['original']
+    for launch_num, launch in enumerate(resp.json()):
+        links_item = launch['links']['flickr']['original']
         if links_item:
-            for link in enumerate(links_item):
-                filename = Path(images_path) / f'spacex{launch[0]}' \
-                    f'{link[0]}.jpg'
-                download_image(link[1], filename)
+            for link_num, link in enumerate(links_item):
+                filename = Path(images_path) / f'spacex{launch_num}' \
+                    f'{link_num}.jpg'
+                download_image(link, filename)
 
 
 if __name__ == '__main__':
