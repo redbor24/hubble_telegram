@@ -79,15 +79,10 @@ def get_epic_images(nasa_token, save_path):
         )
 
 
-def get_spacex_images(nasa_token, save_path):
+def get_spacex_images(save_path):
     os.makedirs(save_path, exist_ok=True)
-    params = {
-        'api_key': nasa_token
-    }
-
     resp = requests.get(
         'https://api.spacexdata.com/v4/launches',
-        params=params
     )
     resp.raise_for_status()
 
@@ -101,6 +96,6 @@ def get_spacex_images(nasa_token, save_path):
 
 
 if __name__ == '__main__':
-    get_apod_images(NASA_TOKEN, IMAGES_PATH, 3)
-    get_epic_images(NASA_TOKEN, IMAGES_PATH)
-    get_spacex_images(NASA_TOKEN, IMAGES_PATH)
+    # get_apod_images(NASA_TOKEN, IMAGES_PATH, 3)
+    # get_epic_images(NASA_TOKEN, IMAGES_PATH)
+    get_spacex_images(IMAGES_PATH)
